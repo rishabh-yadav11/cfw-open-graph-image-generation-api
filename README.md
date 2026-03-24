@@ -47,3 +47,22 @@ npm run deploy
 ```bash
 curl -X GET "http://localhost:8787/v1/metadata?url=https://example.com" -H "Authorization: Bearer <your_api_key>"
 ```
+
+## Infrastructure Setup
+
+Run these commands to initialize the required Cloudflare resources:
+
+```bash
+# 1. Create KV Namespace (Note the ID from the output)
+wrangler kv:namespace create "KV"
+
+# 2. Create R2 Bucket
+wrangler r2 bucket create placeholders
+
+# 3. Set Secrets
+wrangler secret put API_KEY_SECRET
+wrangler secret put HMAC_SECRET
+```
+
+> **Note:** After creating KV/R2, update the `id` fields in `wrangler.jsonc` with the IDs provided by the command output.
+
