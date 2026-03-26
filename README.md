@@ -1,68 +1,42 @@
-# Open Graph Image Generation API
+# Dynamic OG Image Generator
 
-Cloudflare Worker API to generate Open Graph images and fetch website metadata.
+> **Design / Media** | High-performance API powered by Cloudflare Workers.
 
-## Prerequisites
+## Description
+Programmatically generate social share images from SVG/HTML templates. Built-in caching.
 
-- Node.js
-- Wrangler CLI
+This API is designed for high-scale applications requiring low latency and robust security. It is fully integrated with RapidAPI for seamless billing and key management.
 
-## Local Development
+## Key Features
+- **Global Low Latency**: Deployed on Cloudflare's global edge network.
+- **Enterprise Security**: Built-in SSRF protection and strict input validation.
+- **Developer First**: Structured JSON responses and clear error codes.
+- **RapidAPI Ready**: No custom auth logic required; simply use your RapidAPI Key.
 
-```bash
-npm install
-npm run dev
+## Authentication
+This API is exclusively available via **RapidAPI**. 
+1. Subscribe to a plan on the RapidAPI Marketplace.
+2. Include the following headers in your requests:
+   - `X-RapidAPI-Key`: Your unique RapidAPI Subscription Key.
+   - `X-RapidAPI-Host`: The host assigned by RapidAPI.
+
+## API Endpoints
+- POST /v1/og/render\n- GET /v1/og/:image_id
+
+## Implementation Details
+- **Technology**: TypeScript / Hono / Cloudflare Workers
+- **Database**: Cloudflare D1 (SQL) for usage tracking
+- **Response Format**: JSON
+- **Rate Limits**: Managed by your RapidAPI plan (Basic, Pro, Ultra)
+
+## Standard Response Shape
+```json
+{
+  "ok": true,
+  "data": { ... },
+  "request_id": "req_..."
+}
 ```
 
-## Testing
-
-```bash
-npm test
-```
-
-## Deployment
-
-Make sure to set the correct bindings in `wrangler.jsonc`.
-```bash
-npm run deploy
-```
-
-## Environment Variables
-- `API_KEY` (Secret)
-- `ADMIN_IPS` (Comma-separated list of allowed IPs for admin keys)
-- `KV` (KV Namespace for rate limiting and state)
-- `R2` (R2 Bucket for storing generated images)
-
-## Endpoints
-- `GET /v1/metadata?url=`
-- `GET /v1/favicon?url=`
-- `GET /v1/schema?url=`
-- `POST /v1/metadata/batch`
-- `POST /v1/og/render`
-- `GET /v1/og/:image_id`
-- `POST /v1/og/templates`
-
-## Examples
-
-```bash
-curl -X GET "http://localhost:8787/v1/metadata?url=https://example.com" -H "Authorization: Bearer <your_api_key>"
-```
-
-## Infrastructure Setup
-
-Run these commands to initialize the required Cloudflare resources:
-
-```bash
-# 1. Create KV Namespace (Note the ID from the output)
-wrangler kv:namespace create "KV"
-
-# 2. Create R2 Bucket
-wrangler r2 bucket create placeholders
-
-# 3. Set Secrets
-wrangler secret put API_KEY_SECRET
-wrangler secret put HMAC_SECRET
-```
-
-> **Note:** After creating KV/R2, update the `id` fields in `wrangler.jsonc` with the IDs provided by the command output.
-
+---
+*Maintained by rishabh-yadav11. For custom enterprise deployments, contact us.*
